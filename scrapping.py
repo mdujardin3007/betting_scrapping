@@ -11,6 +11,7 @@ from selenium_stealth import stealth
 import pandas as pd
 from datetime import datetime, timedelta # Importe timedelta pour l'heure du prochain run
 import os
+import tempfile
 
 # --- Importation pour Telegram ---
 from telegram import Bot # Importe la classe Bot
@@ -57,12 +58,18 @@ async def main_scrape_and_notify():
         options.add_argument(f"user-agent={random.choice(user_agents)}")
 
         # Désactiver certaines fonctionnalités qui peuvent être détectées
+        options.add_argument("--headless=new")  # ou "--headless" si la version de Chrome est ancienne
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
         options.add_argument("--disable-extensions")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
 
         driver = webdriver.Chrome(options=options)
+
+        tmp_profile_dir = tempfile.mkdtemp()
+        options.add_argument(f"--user-data-dir={tmp_profile_dir}")
 
         # --- Intégration de selenium-stealth (Déplacé ICI) ---
         stealth(driver,

@@ -1,0 +1,27 @@
+name: Run scrapping script hourly
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # toutes les heures à pile (ex: 00h00, 01h00, 02h00 UTC)
+  workflow_dispatch:      # pour lancer à la main si besoin
+
+jobs:
+  run-scrapping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run scrapping script
+        run: |
+          python scrapping.py

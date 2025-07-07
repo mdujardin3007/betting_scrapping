@@ -291,17 +291,11 @@ async def main_scrape_and_notify():
 
 # --- Nouvelle fonction pour planifier les exécutions ---
 async def schedule_runs():
-    while True:
-        print(f"\n--- DÉBUT DE L'EXÉCUTION DU SCRIPT À {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-        await main_scrape_and_notify()
+    print(f"\n--- DÉBUT DE L'EXÉCUTION DU SCRIPT À {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+    await main_scrape_and_notify()
         
-        # Calculer le temps d'attente jusqu'à la prochaine heure pile
-        # ou simplement attendre une heure complète
-        wait_seconds = 3600 # Attendre 1 heure (3600 secondes)
-        
-        print(f"\n--- FIN DE L'EXÉCUTION. Prochain lancement dans 1 heure (vers {datetime.now() + timedelta(seconds=wait_seconds)}). ---")
-        await asyncio.sleep(wait_seconds)
-
+    print(f"\n--- FIN DE L'EXÉCUTION). ---")
+    
 # --- Exécution de la fonction asynchrone pour la planification ---
 if __name__ == "__main__":
     try:

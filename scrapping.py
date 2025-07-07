@@ -16,6 +16,20 @@ import tempfile
 # --- Importation pour Telegram ---
 from telegram import Bot # Importe la classe Bot
 import asyncio # Nécessaire pour exécuter les fonctions async de Telegram
+import subprocess
+
+def git_commit_push(commit_message="Mise à jour des données valuebets"):
+    try:
+        # Configure Git user si nécessaire (tu peux commenter si déjà configuré globalement)
+        subprocess.run(["git", "config", "--global", "user.email", "ton_email@example.com"], check=True)
+        subprocess.run(["git", "config", "--global", "user.name", "TonNomGit"], check=True)
+
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+        subprocess.run(["git", "push"], check=True)
+        print("Commit et push Git effectués avec succès.")
+    except subprocess.CalledProcessError as e:
+        print(f"Erreur lors du commit/push Git : {e}")
 
 # --- Configuration Telegram (À REMPLIR PAR TES INFORMATIONS) ---
 TELEGRAM_BOT_TOKEN = "7741033479:AAGsYS9YumE_Fn4ISt7nNNwpL2NVfr8X5v4" # Ton token
@@ -218,6 +232,9 @@ async def main_scrape_and_notify():
                 
                 df_final.to_excel(DATABASE_FILE, index=False)
                 print(f"Base de données mise à jour et sauvegardée dans '{DATABASE_FILE}'. Taille totale: {len(df_final)}.")
+
+                # Commit & push automatique du fichier Excel et autres changements
+                git_commit_push(commit_message=f"Mise à jour valuebets {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
                 # --- Envoi d'UN SEUL message avec toutes les nouvelles lignes ---
                 print("Préparation de l'envoi du message Telegram consolidé...")

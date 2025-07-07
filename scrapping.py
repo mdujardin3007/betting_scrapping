@@ -118,8 +118,14 @@ async def main_scrape_and_notify():
         # --- DÉBUT DU SCRAPING ---
         current_request_time = datetime.now()
         today_date_str = current_request_time.strftime("%Y-%m-%d")
-        DATABASE_FILE = f"D:/Users/Mathieu/Documents/Vie active/Scraping surebet/valuebets_database_{today_date_str}.xlsx"
+        today_date_str = datetime.now().strftime('%Y-%m-%d')
+        
+        folder = './data'
 
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        DATABASE_FILE = f"{folder}/valuebets_database_{today_date_str}.xlsx"
         print(f"\n--- Scraping des valuebets à {current_request_time.strftime('%Y-%m-%d %H:%M:%S')} ---")
         print(f"Les données seront sauvegardées dans : {DATABASE_FILE}")
 

@@ -229,6 +229,7 @@ async def main_scrape_and_notify():
             else:
                 df_final = df_existing.copy()
 
+            print(df_final.head())
             df_final = df_final.reset_index(drop=True)  # Remettre un index simple
 
             df_final.to_excel(DATABASE_FILE, index=False)

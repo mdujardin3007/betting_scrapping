@@ -221,7 +221,7 @@ async def main_scrape_and_notify():
 
             df_new_scrape = df_new_scrape.set_index("ID")
             df_existing = df_existing.set_index("ID")
-
+            print(df_existing.head())
             new_entries = df_new_scrape.loc[~df_new_scrape.index.isin(df_existing.index)]
 
             if not new_entries.empty:

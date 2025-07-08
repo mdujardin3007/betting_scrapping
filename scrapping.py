@@ -18,6 +18,20 @@ from telegram import Bot # Importe la classe Bot
 import asyncio # Nécessaire pour exécuter les fonctions async de Telegram
 import subprocess
 
+
+
+from telegram import InputFile
+
+async def send_telegram_file(file_path, caption=None):
+    bot = Bot(token=TELEGRAM_BOT_TOKEN)
+    for chat_id in TELEGRAM_CHAT_ID:
+        try:
+            with open(file_path, 'rb') as f:
+                await bot.send_document(chat_id=chat_id, document=InputFile(f), caption=caption or "")
+                print(f"✅ Fichier {file_path} envoyé à {chat_id}.")
+        except Exception as e:
+            print(f"❌ Erreur lors de l'envoi du fichier à {chat_id} : {e}")
+
 def git_commit_push(commit_message="Mise à jour des données valuebets"):
     try:
         # Configure Git user si nécessaire (tu peux commenter si déjà configuré globalement)
@@ -140,6 +154,22 @@ async def main_scrape_and_notify():
             os.makedirs(folder)
 
         DATABASE_FILE = f"{folder}/valuebets_database_{today_date_str}.xlsx"
+
+        # Si le fichier du jour n'existe pas encore, on est dans un nouveau jour
+        # if not os.path.exists(DATABASE_FILE):
+        if True:
+            print(f"📅 Nouveau jour détecté : {today_date_str}")
+            
+            # Envoi du fichier Excel d'hier si existant
+            yesterday_date_str = (current_request_time - timedelta(days=1)).strftime('%Y-%m-%d')
+            yesterday_file = f"{folder}/valuebets_database_{yesterday_date_str}.xlsx"
+            
+            if os.path.exists(yesterday_file):
+                print(f"📤 Envoi du fichier Excel d'hier : {yesterday_file}")
+                await send_telegram_file(yesterday_file, caption=f"📈 Fichier valuebets du {yesterday_date_str}")
+            else:
+                print(f"📁 Aucun fichier trouvé pour hier ({yesterday_file}), rien à envoyer.")
+        
         print(f"\n--- Scraping des valuebets à {current_request_time.strftime('%Y-%m-%d %H:%M:%S')} ---")
         print(f"Les données seront sauvegardées dans : {DATABASE_FILE}")
 

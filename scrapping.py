@@ -221,7 +221,6 @@ async def main_scrape_and_notify():
 
             df_new_scrape = df_new_scrape.set_index("ID")
             df_existing = df_existing.set_index("ID")
-            print(df_existing.head())
             new_entries = df_new_scrape.loc[~df_new_scrape.index.isin(df_existing.index)]
 
             if not new_entries.empty:
@@ -229,9 +228,7 @@ async def main_scrape_and_notify():
             else:
                 df_final = df_existing.copy()
 
-            print(df_final.head())
             df_final = df_final.drop(columns=["event_short"]).reset_index()  # Remettre un index simple
-            print(df_final.head())
 
             df_final.to_excel(DATABASE_FILE, index=False)
             print(f"✅ Données sauvegardées dans {DATABASE_FILE} avec {len(df_final)} entrées.")

@@ -229,7 +229,9 @@ async def main_scrape_and_notify():
             else:
                 df_final = df_existing.copy()
 
-            df_final = df_final.drop(columns=["event_short"])  # Remettre un index simple
+            print(df_final.head())
+            df_final = df_final.drop(columns=["event_short"]).reset_index()  # Remettre un index simple
+            print(df_final.head())
 
             df_final.to_excel(DATABASE_FILE, index=False)
             print(f"✅ Données sauvegardées dans {DATABASE_FILE} avec {len(df_final)} entrées.")

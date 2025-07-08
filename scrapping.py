@@ -12,7 +12,7 @@ import pandas as pd
 from datetime import datetime, timedelta # Importe timedelta pour l'heure du prochain run
 import os
 import tempfile
-
+from zoneinfo import ZoneInfo
 # --- Importation pour Telegram ---
 from telegram import Bot # Importe la classe Bot
 import asyncio # Nécessaire pour exécuter les fonctions async de Telegram
@@ -233,7 +233,8 @@ async def main_scrape_and_notify():
             df_final.to_excel(DATABASE_FILE, index=False)
             print(f"✅ Données sauvegardées dans {DATABASE_FILE} avec {len(df_final)} entrées.")
 
-            await send_telegram_message(f"✅ Scraping terminé à {current_request_time.strftime('%Y-%m-%d %H:%M:%S')}\nNombre total d'entrées : {len(df_final)}")
+            paris_time = current_request_time.astimezone(ZoneInfo("Europe/Paris"))
+            await send_telegram_message(f"✅ Scraping terminé à {paris_time.strftime('%Y-%m-%d %H:%M:%S')} (heure de Paris)\nNombre total d'entrées : {len(df_final)}")
 
             # Git commit/push
             git_commit_push()

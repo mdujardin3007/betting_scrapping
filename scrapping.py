@@ -156,12 +156,11 @@ async def main_scrape_and_notify():
         DATABASE_FILE = f"{folder}/valuebets_database_{today_date_str}.xlsx"
 
         # Si le fichier du jour n'existe pas encore, on est dans un nouveau jour
-        # if not os.path.exists(DATABASE_FILE):
-        if True:
+        if not os.path.exists(DATABASE_FILE):
             print(f"📅 Nouveau jour détecté : {today_date_str}")
             
             # Envoi du fichier Excel d'hier si existant
-            yesterday_date_str = (current_request_time - timedelta(days=0)).strftime('%Y-%m-%d')
+            yesterday_date_str = (current_request_time - timedelta(days=1)).strftime('%Y-%m-%d')
             yesterday_file = f"{folder}/valuebets_database_{yesterday_date_str}.xlsx"
             
             if os.path.exists(yesterday_file):
